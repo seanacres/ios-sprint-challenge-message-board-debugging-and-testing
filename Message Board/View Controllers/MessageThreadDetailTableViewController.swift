@@ -13,6 +13,8 @@ class MessageThreadDetailTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        tableView.accessibilityLabel = "MessageThreadDetailTableView"
+        
         title = messageThread?.title
     }
     
@@ -35,6 +37,7 @@ class MessageThreadDetailTableViewController: UITableViewController {
         
         cell.textLabel?.text = message?.messageText
         cell.detailTextLabel?.text = message?.sender
+        cell.accessibilityLabel = "MessageThreadDetailTableVC.Cell\(indexPath)"
         
         return cell
     }
@@ -42,7 +45,7 @@ class MessageThreadDetailTableViewController: UITableViewController {
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "AddMesage" {
+        if segue.identifier == "AddMessage" {
             guard let destinationVC = segue.destination as? MessageDetailViewController else { return }
             
             destinationVC.messageThreadController = messageThreadController

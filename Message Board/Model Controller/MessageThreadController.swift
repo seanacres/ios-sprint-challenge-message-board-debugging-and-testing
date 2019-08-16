@@ -31,7 +31,24 @@ class MessageThreadController {
             guard let data = data else { NSLog("No data returned from data task"); completion(); return }
             
             do {
-                self.messageThreads = try JSONDecoder().decode([MessageThread].self, from: data)
+                let results = try JSONDecoder().decode([String : MessageThread].self, from: data)
+                let resultsArray = Array(results.values)
+                
+                var sorted: [MessageThread] = []
+                
+                for thread in resultsArray {
+                    thread.messages.sort(by: {$0.timestamp < $1.timestamp})
+                    if let newestTimestamp = thread.messages.first?.timestamp {
+                        thread.timestamp = newestTimestamp
+                    } else {
+                      thread.timestamp = Date()
+                    }
+                    sorted.append(thread)
+                }
+                
+                sorted.sort(by: { $0.timestamp! < $1.timestamp!})
+                
+                self.messageThreads = sorted
             } catch {
                 self.messageThreads = []
                 NSLog("Error decoding message threads from JSON data: \(error)")
@@ -71,8 +88,7 @@ class MessageThreadController {
             
             self.messageThreads.append(thread)
             completion()
-            
-        }
+        }.resume()
     }
     
     func createMessage(in messageThread: MessageThread, withText text: String, sender: String, completion: @escaping () -> Void) {
@@ -111,6 +127,6 @@ class MessageThreadController {
         }.resume()
     }
     
-    static let baseURL = URL(string: "https://lambda-message-board.firebaseio.com/")!
+    static let baseURL = URL(string: "https://journal-9006c.firebaseio.com/")!
     var messageThreads: [MessageThread] = []
 }
