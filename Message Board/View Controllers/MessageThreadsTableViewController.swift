@@ -68,3 +68,10 @@ class MessageThreadsTableViewController: UITableViewController {
     
     @IBOutlet weak var threadTitleTextField: UITextField!
 }
+
+extension MessageThreadsTableViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        createThread(self)
+        return true
+    }
+}
