@@ -23,14 +23,31 @@ class Message_BoardUITests: XCTestCase {
         app.launch()
     }
     
-    func testNewMessageDismisses() {
+    func testNewMessage() {
         firstMessageThreadCell.tap()
         addMessageButton.tap()
+        
+        nameTextField.tap()
+        nameTextField.typeText("Sean1")
+        
+        messageTextView.tap()
+        messageTextView.typeText("Test1")
         
         XCTAssertTrue(sendMessageButton.exists)
         sendMessageButton.tap()
         
         XCTAssertTrue(firstMessageThreadDetailCell.isHittable)
+    }
+    
+    func testMessageThreadCellsContainTitles() {
+        XCTAssertTrue(messageThreadTableView.cells.staticTexts["A New Thread"].exists)
+        XCTAssertTrue(messageThreadTableView.cells.staticTexts["Testing again"].exists)
+    }
+    
+    func testMessageThreadDetailCellContainsTitleAndSubtitle() {
+        firstMessageThreadCell.tap()
+        XCTAssertFalse(messageThreadDetailTableView.cells.staticTexts["Title"].exists)
+        XCTAssertFalse(messageThreadDetailTableView.cells.staticTexts["Subtitle"].exists)
     }
     
     var sendMessageButton: XCUIElement {
@@ -59,6 +76,34 @@ class Message_BoardUITests: XCTestCase {
         let cell = app.cells["MessageThreadDetailTableVC.Cell[0, 0]"]
         XCTAssertTrue(cell.exists)
         return cell
+    }
+    
+    var nameTextField: XCUIElement {
+        let app = XCUIApplication()
+        let nameTextField = app.textFields["NewMessage.NameTextField"]
+        XCTAssertTrue(nameTextField.exists)
+        return nameTextField
+    }
+    
+    var messageTextView: XCUIElement {
+        let app = XCUIApplication()
+        let messageTextView = app.textViews["NewMessage.MessageTextView"]
+        XCTAssertTrue(messageTextView.exists)
+        return messageTextView
+    }
+    
+    var messageThreadTableView: XCUIElement {
+        let app = XCUIApplication()
+        let messageThreadTableView = app.tables["MessageThreadsTableView"]
+        XCTAssertTrue(messageThreadTableView.exists)
+        return messageThreadTableView
+    }
+    
+    var messageThreadDetailTableView: XCUIElement {
+        let app = XCUIApplication()
+        let messageThreadDetailTableView = app.tables["MessageThreadDetailTableView"]
+        XCTAssertTrue(messageThreadDetailTableView.exists)
+        return messageThreadDetailTableView
     }
     
 }

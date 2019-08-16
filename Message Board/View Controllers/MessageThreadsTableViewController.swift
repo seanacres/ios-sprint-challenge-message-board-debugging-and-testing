@@ -13,6 +13,8 @@ class MessageThreadsTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        tableView.accessibilityLabel = "MessageThreadsTableView"
+        
         messageThreadController.fetchMessageThreads {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
